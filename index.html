@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karri Shanmukh Narayana Reddy | Portfolio</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- AOS Animation CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <style>
+        /* CSS Variables for Dark & Yellow Theme */
+        :root {
+            --primary-yellow: #FFD700;
+            --bg-main: #121212;        /* Deep dark background */
+            --card-bg: #1E1E1E;        /* Slightly lighter dark for cards */
+            --section-alt: #181818;    /* Alternating section background */
+            --border-color: #333333;   /* Dark grey for subtle borders */
+            --text-main: #F5F5F5;      /* Off-white text for readability */
+            --text-muted: #B0BEC5;     /* Grey text for paragraphs/subtitles */
+            --shadow: 0 10px 30px rgba(255, 215, 0, 0.15); /* Soft yellow glow */
+            --card-shadow: 0 10px 20px rgba(0, 0, 0, 0.5); /* Deep black shadow */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Background VFX Graphics - Adapted for Dark Theme */
+        /* 3D Canvas Background */
+        #bg-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: -1;
+            background-color: #0a0a0a;
+        }
+        .vfx-bg { display: none; }
+
+        /* About boxes */
+        .about-boxes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+        .about-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-top: 4px solid var(--primary-yellow);
+            border-radius: 20px;
+            padding: 36px 30px;
+            text-align: center;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .about-box::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at top center, rgba(255,215,0,0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .about-box-icon { font-size: 2.8rem; margin-bottom: 16px; display: block; }
+        .about-box h3 { color: var(--primary-yellow); font-size: 1.25rem; margin-bottom: 14px; font-weight: 700; }
+        .about-box p { color: var(--text-muted); font-size: 0.97rem; line-height: 1.8; }
+
+        /* Achievement Boxes */
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+        .achievement-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-bottom: 4px solid var(--primary-yellow);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        .achievement-box:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: var(--shadow);
+        }
+        .achievement-img-wrap {
+            position: relative;
+            width: 100%;
+            height: 190px;
+            overflow: hidden;
+        }
+        .achievement-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .achievement-box:hover .achievement-img {
+            transform: scale(1.08);
+        }
+        .achievement-img-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(18,18,18,0.75) 100%);
+        }
+        .achievement-icon {
+            position: absolute;
+            bottom: 14px;
+            left: 18px;
+            font-size: 2rem;
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.7));
+        }
+        .achievement-body {
+            padding: 24px 26px 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex-grow: 1;
+        }
+        .achievement-body h3 {
+            color: var(--primary-yellow);
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        .achievement-body p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.75;
+        }
+        .achievement-body strong { color: var(--text-main); }
+
+        /* Navigation Bar */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap; 
+            gap: 40px; 
+            background: rgba(18, 18, 18, 0.9); /* Dark translucent */
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-main);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+
+        .logo span {
+            color: var(--primary-yellow);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 25px; 
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 3px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--primary-yellow);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary-yellow);
+        }
+
+        /* Sections */
+        section {
+            padding: 100px 10%;
+            min-height: 100vh;
+        }
+
+        /* Alternating Dark Section */
+        .bg-grey {
+            background-color: rgba(24, 24, 24, 0.8);
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        /* Hero Section */
+        #home {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding-top: 160px; 
+            padding-bottom: 50px;
+        }
+
+        .profile-pic-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .profile-pic {
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid var(--card-bg);
+            box-shadow: var(--shadow);
+            position: relative;
+            z-index: 2;
+            animation: popIn 1.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        .glow-ring {
+            position: absolute;
+            top: -10px; left: -10px; right: -10px; bottom: -10px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary-yellow), #6B5B00, var(--primary-yellow));
+            z-index: 1;
+            animation: spin 3s linear infinite;
+        }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes popIn { 0% { transform: scale(0); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+        .hero-name {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #FFFFFF, var(--primary-yellow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-title {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+        }
+
+        /* Section Titles */
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            text-align: center;
+            position: relative;
+            width: 100%; 
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            width: 80px; 
+            height: 4px;
+            background: var(--primary-yellow);
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%); 
+            border-radius: 2px;
+        }
+
+        /* About Me Text Styling */
+        .about-text {
+            max-width: 800px;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            line-height: 1.8;
+            margin: 0 auto;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        /* Cards and Lists */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            border-bottom: 4px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: var(--shadow);
+            border-bottom: 4px solid var(--primary-yellow);
+        }
+
+        .card-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            transition: 0.3s;
+        }
+        
+        .card:hover .card-img {
+            transform: scale(1.03);
+        }
+
+        .card h3 {
+            color: var(--primary-yellow);
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+
+        .card p, .card ul {
+            color: var(--text-muted);
+            line-height: 1.6;
+            font-size: 0.95rem;
+            flex-grow: 1;
+        }
+        
+        .card ul {
+            padding-left: 20px;
+            margin-top: 10px;
+        }
+
+        .btn-small {
+            display: inline-block;
+            padding: 8px 20px;
+            background: var(--bg-main);
+            color: var(--text-main);
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-right: 10px;
+            margin-top: 15px;
+            border: 1px solid var(--border-color);
+            transition: 0.3s;
+        }
+
+        .btn-small:hover {
+            background: var(--primary-yellow);
+            color: #121212; /* Dark text on bright background for contrast */
+            box-shadow: 0 4px 10px rgba(255, 215, 0, 0.4);
+            border-color: var(--primary-yellow);
+        }
+
+        /* Skills specific Styles */
+        .skills-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .skills-box {
+            background: var(--card-bg);
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border-color);
+            border-top: 4px solid var(--primary-yellow);
+            transition: all 0.4s ease;
+        }
+
+        .skills-box:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow);
+        }
+
+        .skills-box h3 {
+            text-align: center;
+            color: var(--primary-yellow);
+            margin-bottom: 25px;
+            font-size: 1.4rem;
+        }
+
+        .skills-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .skill-badge {
+            background: var(--bg-main); 
+            color: var(--text-main);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            transition: 0.3s;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+        }
+
+        .skill-badge:hover {
+            background: var(--primary-yellow);
+            border-color: var(--primary-yellow);
+            color: #121212;
+            transform: scale(1.1);
+        }
+
+        /* Timeline for Education */
+        .timeline {
+            border-left: 4px solid var(--primary-yellow);
+            padding-left: 30px;
+            margin-left: 20px;
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -40px;
+            top: 5px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 4px solid var(--primary-yellow);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .date-badge {
+            background: rgba(255, 215, 0, 0.1); /* Subtle yellow background */
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            color: var(--primary-yellow);
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 10px;
+            align-self: flex-start;
+        }
+
+        /* Contact Section */
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            background: var(--card-bg);
+            color: var(--text-main);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            border: 2px solid var(--border-color);
+        }
+
+        .btn:hover {
+            background: var(--primary-yellow);
+            color: #121212;
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+            border-color: transparent;
+        }
+
+    </style>
+</head>
+<body>
+
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Top Navigation -->
+    <nav data-aos="fade-down" data-aos-duration="1000">
+        <div class="logo">K<span>SNR</span></div>
+        <ul class="nav-links">
+            <li><a href="#about">About</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#training">Training</a></li>
+            <li><a href="#certification">Certification</a></li>
+            <li><a href="#achievements">Achievements</a></li>
+            <li><a href="#education">Education</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home">
+        <div class="profile-pic-container" data-aos="zoom-in" data-aos-duration="1200">
+            <div class="glow-ring"></div>
+            <!-- REPLACE SRC WITH YOUR PHOTO URL -->
+            <img src="12.jpg" alt="Karri Shanmukh Narayana Reddy" class="profile-pic">
+        </div>
+        <h1 class="hero-name" data-aos="fade-up" data-aos-delay="200">Karri Shanmukh Narayana Reddy</h1>
+        <p class="hero-title" data-aos="fade-up" data-aos-delay="400">Aspiring DevOps & CLoud Egineer | Frontend Developer | Story Writer</p>
+        
+        <div data-aos="fade-up" data-aos-delay="600">
+            <a href="shanmukh reddy cv.pdf" download="Karri_Shanmukh_Narayana_Reddy_Resume.pdf" class="btn" style="background: var(--primary-yellow); color: #121212; border-color: transparent;">Download Resume</a>
+        </div>
+    </section>
+
+    <!-- Dedicated About Me Section -->
+    <section id="about" class="bg-grey">
+        <h2 class="section-title" data-aos="fade-up">About Me</h2>
+        <div class="about-boxes">
+            <div class="about-box" data-aos="fade-right" data-aos-delay="100">
+                <span class="about-box-icon">🎓</span>
+                <h3>Who I Am</h3>
+                <p>I am a Computer Science & Engineering student at Lovely Professional University with a specialized focus on the world of Cloud Computing. Rather than just writing code, I am driven by the "big picture" of technology—understanding how global systems are architected, deployed, and managed. I bridge the gap between technical engineering and operational efficiency, aiming to become a professional who ensures digital platforms are scalable, reliable, and ready for a global audience.</p>
+            </div>
+            <div class="about-box" data-aos="fade-up" data-aos-delay="200">
+                <span class="about-box-icon">💻</span>
+                <h3>What I Do</h3>
+                <p>I am exploring and implementing Cloud Infrastructure solutions, particularly within the AWS and IBM ecosystems. My learning centers on configuring virtual environments, managing cloud-native services, and understanding the operational backbone that allows applications to run without interruption.My focus is on system reliability and resource optimization—configuring that allows apps and media platforms to scale effortlessly. I bridge the gap between technical complexity and smooth operational performance."</p>
+            </div>
+            <div class="about-box" data-aos="fade-left" data-aos-delay="300">
+                <span class="about-box-icon">🚀</span>
+                <h3>My Drive</h3>
+                <p>I am motivated by the challenge of global scalability—the idea that a well-architected system can support millions of users simultaneously across the world. My drive comes from a desire to understand the future of infrastructure and how cloud technologies are reshaping international business operations. I am committed to building the stable, efficient foundations that allow modern organizations to thrive in a connected economy.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills">
+        <h2 class="section-title" data-aos="fade-up">Skills</h2>
+        <div class="skills-container">
+            
+            <!-- Left Box: Technical Skills -->
+            <div class="skills-box" data-aos="fade-right" data-aos-delay="100">
+                <h3>Technical Skills</h3>
+                <div class="skills-wrapper">
+                    <div class="skill-badge">C++</div>
+                    <div class="skill-badge">Python</div>
+                    <div class="skill-badge">Java</div>
+                    <div class="skill-badge">HTML & CSS</div>
+                    <div class="skill-badge">JavaScript</div>
+                    <div class="skill-badge">Ubuntu Linux</div>
+                    <div class="skill-badge">AWS Cloud</div>
+                    <div class="skill-badge">Docker</div>
+                    <div class="skill-badge">GitHub</div>
+                </div>
+            </div>
+
+            <!-- Right Box: Soft Skills -->
+            <div class="skills-box" data-aos="fade-left" data-aos-delay="200">
+                <h3>Soft Skills</h3>
+                <div class="skills-wrapper">
+                    <div class="skill-badge">Prioritization</div>
+                    <div class="skill-badge">Team Work</div>
+                    <div class="skill-badge">Adaptability</div>
+                    <div class="skill-badge">Resilience</div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="bg-grey">
+        <h2 class="section-title" data-aos="fade-up">Projects</h2>
+        <div class="grid-container">
+            <div class="card" data-aos="flip-up" data-aos-delay="100">
+                <img src="cyter.png" alt="CYTER Project" class="card-img">
+                <span class="date-badge">Mar '25 - Apr '25</span>
+                <h3>CYTER - Currency & Calculator Chat Bot</h3>
+                <p><strong>Tech Stack:</strong> HTML, CSS, JavaScript</p>
+                <ul>
+                    <li>Designed and built a responsive chatbot UI allowing users to perform financial tasks through simple conversational flow.</li>
+                    <li>Optimized data retrieval by structuring exchange rates in JS Objects, achieving near-instant conversion results with 100% accuracy.</li>
+                    <li>Executed a high-speed financial utility tool eliminating manual calculations.</li>
+                </ul>
+                <div style="margin-top: auto;">
+                    <a href="https://github.com/shanmukhreddy10" target="_blank" class="btn-small">GitHub</a>
+                    <a href="https://shanmukhreddy10.github.io/Currency-And-Calculator-Chat-Bot/" target="_blank" class="btn-small">Live Demo</a>
+                </div>
+            </div>
+            
+            <div class="card" data-aos="flip-up" data-aos-delay="300">
+                <img src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=600&auto=format&fit=crop" alt="Book Sell Project" class="card-img">
+                <span class="date-badge">Nov '24 - Dec '24</span>
+                <h3>Book Sell – Book Store Management</h3>
+                <p><strong>Tech Stack:</strong> Python</p>
+                <ul>
+                    <li>Engineered a comprehensive command-line application using Python and OOP principles for inventory and financial management.</li>
+                    <li>Streamlined store operations by automating Profit/Loss reporting, reducing manual accounting errors.</li>
+                    <li>Centralizes inventory tracking and financial analysis for instant, accurate store reports.</li>
+                </ul>
+                <div style="margin-top: auto;">
+                    <a href="https://github.com/shanmukhreddy10" target="_blank" class="btn-small">GitHub</a>
+                    <a href="#" target="_blank" class="btn-small">Live Demo</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Training Section -->
+    <section id="training">
+        <h2 class="section-title" data-aos="fade-up">Training</h2>
+        <div class="grid-container" style="justify-content: center; display: flex;">
+            <div class="card" data-aos="zoom-in" data-aos-delay="100" style="max-width: 600px; width: 100%;">
+                <h3>Data Structure</h3>
+                <span class="date-badge">Cipher Schools | Jul '25 – Aug '25</span>
+                <ul>
+                    <li>Successfully finished specialized training program in Data Structures and Algorithms.</li>
+                    <li>Constructed practical understanding of basic and sophisticated concepts.</li>
+                    <li>Developed abilities for solving challenging computational problems.</li>
+                </ul>
+                <div style="margin-top: auto;">
+                    <a href="#" class="btn-small">View Training Link</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Certifications Section -->
+    <section id="certification" class="bg-grey">
+        <h2 class="section-title" data-aos="fade-up">Certifications</h2>
+        <div class="grid-container">
+            <div class="card" data-aos="fade-up" data-aos-delay="100">
+                <img src="aws.png" alt="AWS Certificate" class="card-img">
+                <h3>Aws Cloud Architecting</h3>
+                <p><strong>Issuer:</strong> Aws Academy</p>
+                <span class="date-badge">Feb 2026</span>
+                <div style="margin-top: auto;">
+                    <a href="https://www.credly.com/badges/4bb5d4e6-3688-48f1-a0f4-3d58a69cd935/public_url" class="btn-small">View Credential</a>
+                </div>
+            </div>
+
+            <div class="card" data-aos="fade-up" data-aos-delay="200">
+                <img src="ibm.png" alt="IBM Certificate" class="card-img">
+                <h3>IBM Cloud Essentials</h3>
+                <p><strong>Issuer:</strong> IBM Skills Build</p>
+                <span class="date-badge">Oct 2025</span>
+                <div style="margin-top: auto;">
+                    <a href="https://courses.yl-ptech.skillsnetwork.site/certificates/4607757e35b9468599007fc06466c2d9" class="btn-small">View Credential</a>
+                </div>
+            </div>
+
+            <div class="card" data-aos="fade-up" data-aos-delay="300">
+                <img src="social.jpeg" alt="NPTEL Certificate" class="card-img">
+                <h3>Social Networks</h3>
+                <p><strong>Issuer:</strong> NPTEL Swayam</p>
+                <span class="date-badge">Apr 2025</span>
+                <div style="margin-top: auto;">
+                    <a href="#" class="btn-small">View Credential</a>
+                </div>
+            </div>
+
+            <div class="card" data-aos="fade-up" data-aos-delay="400">
+                <img src="edyoda.png" alt="Ed Yoda Certificate" class="card-img">
+                <h3>Front End Web Development</h3>
+                <p><strong>Issuer:</strong> Ed Yoda</p>
+                <span class="date-badge">Mar 2024</span>
+                <div style="margin-top: auto;">
+                    <a href="https://classroom.edyoda.com/public-certificate/ksnreddy1082005/FEMD240224" class="btn-small">View Credential</a>
+                </div>
+            </div>
+
+            <div class="card" data-aos="fade-up" data-aos-delay="500">
+                <img src="freecode.png" alt="Free Code Camp Certificate" class="card-img">
+                <h3>Responsive Web Design</h3>
+                <p><strong>Issuer:</strong> Free code Camp</p>
+                <span class="date-badge">Nov 2023</span>
+                <div style="margin-top: auto;">
+                    <a href="https://www.freecodecamp.org/certification/fcc090cae3f-946a-4283-b9fc-bf8eae8797e6/responsive-web-design" class="btn-small">View Credential</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Achievements Section -->
+    <section id="achievements">
+        <h2 class="section-title" data-aos="fade-up">Achievements</h2>
+        <div class="achievements-grid">
+
+            <!-- Box 1: AWS -->
+            <div class="achievement-box" data-aos="fade-up" data-aos-delay="100">
+                <div class="achievement-img-wrap">
+                    <img
+                        src="aws badge.png"
+                        alt="AWS Cloud Architecting"
+                        class="achievement-img"
+                    >
+                    <div class="achievement-img-overlay"></div>
+                    <span class="achievement-icon">☁️</span>
+                </div>
+                <div class="achievement-body">
+                    <h3>AWS Academy Graduate – Cloud Architecting</h3>
+                    <p>Earned the <strong>AWS Academy Graduate Badge</strong> in Cloud Architecting, demonstrating proficiency in designing scalable, cost-efficient, and fault-tolerant distributed systems on AWS.</p>
+                </div>
+            </div>
+
+            <!-- Box 2: IBM -->
+            <div class="achievement-box" data-aos="fade-up" data-aos-delay="200">
+                <div class="achievement-img-wrap">
+                    <img
+                        src="ibm badge.png"
+                        alt="IBM Cloud Essentials"
+                        class="achievement-img"
+                    >
+                    <div class="achievement-img-overlay"></div>
+                    <span class="achievement-icon">🏅</span>
+                </div>
+                <div class="achievement-body">
+                    <h3>IBM Cloud Essentials Graduate</h3>
+                    <p>Recognized as an <strong>IBM Cloud Essentials Graduate</strong> for mastering the fundamentals of cloud infrastructure, security, and storage solutions on the IBM Cloud platform.</p>
+                </div>
+            </div>
+
+            <!-- Box 3: Python / HackerRank -->
+            <div class="achievement-box" data-aos="fade-up" data-aos-delay="300">
+                <div class="achievement-img-wrap">
+                    <img
+                        src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=600&auto=format&fit=crop"
+                        alt="Python HackerRank"
+                        class="achievement-img"
+                    >
+                    <div class="achievement-img-overlay"></div>
+                    <span class="achievement-icon">🐍</span>
+                </div>
+                <div class="achievement-body">
+                    <h3>3-Star Python on HackerRank</h3>
+                    <p>Achieved <strong>3-star Proficiency in Python</strong> by successfully solving multiple intermediate-level coding challenges in HackerRank.</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Education Section -->
+    <section id="education" class="bg-grey">
+        <h2 class="section-title" data-aos="fade-up">Education</h2>
+        <div class="timeline">
+            <div class="timeline-item card" data-aos="fade-up" data-aos-delay="100">
+                <span class="date-badge">Aug '23 - Present</span>
+                <h3>Bachelor of Technology - Computer Science and Engineering</h3>
+                <p>Lovely Professional University, Punjab, India</p>
+                <p><strong>CGPA:</strong> 6.3</p>
+            </div>
+            
+            <div class="timeline-item card" data-aos="fade-up" data-aos-delay="200">
+                <span class="date-badge">Jun '22 - May '23</span>
+                <h3>Intermediate</h3>
+                <p>Tirumala Junior College, Rajahmundry, Andhra Pradesh</p>
+                <p><strong>Percentage:</strong> 97.5%</p>
+            </div>
+
+            <div class="timeline-item card" data-aos="fade-up" data-aos-delay="300">
+                <span class="date-badge">Apr '20 - Mar '21</span>
+                <h3>Matriculation</h3>
+                <p>Virinchi Vidhya Niketan, Tanuku, Andhra Pradesh</p>
+                <p><strong>Percentage:</strong> 88%</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" style="min-height: 50vh; padding-bottom: 50px;">
+        <h2 class="section-title" data-aos="fade-up">Get In Touch</h2>
+        <div class="contact-links" data-aos="zoom-out" data-aos-delay="200">
+            <a href="/cdn-cgi/l/email-protection#345f475a465150504d05040c06040401745359555d581a575b59" class="btn">📧 Email Me</a>
+            <a href="https://linkedin.com/in/shanmukh-reddy1" target="_blank" class="btn">💼 LinkedIn</a>
+            <a href="https://github.com/shanmukhreddy10" target="_blank" class="btn">💻 GitHub</a>
+            <a href="tel:+918885243004" class="btn">📞 +91-8885243004</a>
+        </div>
+        <div data-aos="fade-up" data-aos-delay="300" style="max-width:600px; margin: 50px auto 0; display: flex; flex-direction: column; gap: 18px;">
+            <input type="text" placeholder="Your Name" style="width:100%; padding:14px 18px; border-radius:12px; border:1px solid var(--border-color); background:var(--card-bg); color:var(--text-main); font-family:'Poppins',sans-serif; font-size:0.97rem; outline:none; transition:border 0.3s ease;" onfocus="this.style.borderColor='var(--primary-yellow)'" onblur="this.style.borderColor='var(--border-color)'">
+            <input type="email" placeholder="Your Email" style="width:100%; padding:14px 18px; border-radius:12px; border:1px solid var(--border-color); background:var(--card-bg); color:var(--text-main); font-family:'Poppins',sans-serif; font-size:0.97rem; outline:none; transition:border 0.3s ease;" onfocus="this.style.borderColor='var(--primary-yellow)'" onblur="this.style.borderColor='var(--border-color)'">
+            <textarea placeholder="Your Message" rows="5" style="width:100%; padding:14px 18px; border-radius:12px; border:1px solid var(--border-color); background:var(--card-bg); color:var(--text-main); font-family:'Poppins',sans-serif; font-size:0.97rem; outline:none; resize:vertical; transition:border 0.3s ease;" onfocus="this.style.borderColor='var(--primary-yellow)'" onblur="this.style.borderColor='var(--border-color)'"></textarea>
+            <button type="button" style="padding:14px 36px; background:var(--primary-yellow); color:#121212; font-family:'Poppins',sans-serif; font-size:1rem; font-weight:700; border:none; border-radius:30px; cursor:pointer; transition:0.3s ease; box-shadow:0 4px 15px rgba(255,215,0,0.35);" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 25px rgba(255,215,0,0.5)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 15px rgba(255,215,0,0.35)'">Send Message</button>
+        </div>
+    </section>
+
+    <!-- AOS -->
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ offset: 100, delay: 0, duration: 800, once: true });
+    </script>
+
+    <script>
+    // ── CANVAS CONSTELLATION NETWORK BACKGROUND ─────────────────────
+    (function () {
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let W = canvas.width  = window.innerWidth;
+        let H = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            W = canvas.width  = window.innerWidth;
+            H = canvas.height = window.innerHeight;
+        });
+
+        // Node config
+        const NODE_COUNT  = 90;
+        const MAX_DIST    = 160;   // max distance to draw a line
+        const MOUSE_REPEL = 120;   // mouse pushes nodes away gently
+
+        let mouse = { x: W / 2, y: H / 2 };
+        document.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+
+        // Build nodes
+        const nodes = Array.from({ length: NODE_COUNT }, () => ({
+            x:  Math.random() * W,
+            y:  Math.random() * H,
+            vx: (Math.random() - 0.5) * 0.45,
+            vy: (Math.random() - 0.5) * 0.45,
+            r:  Math.random() * 2 + 1.2,
+            // each node is either gold or pale-white
+            gold: Math.random() > 0.45
+        }));
+
+        function draw() {
+            ctx.clearRect(0, 0, W, H);
+
+            // Move nodes
+            for (const n of nodes) {
+                n.x += n.vx;
+                n.y += n.vy;
+                if (n.x < 0 || n.x > W) n.vx *= -1;
+                if (n.y < 0 || n.y > H) n.vy *= -1;
+
+                // subtle mouse repulsion
+                const dx = n.x - mouse.x, dy = n.y - mouse.y;
+                const d  = Math.sqrt(dx*dx + dy*dy);
+                if (d < MOUSE_REPEL) {
+                    const force = (MOUSE_REPEL - d) / MOUSE_REPEL * 0.4;
+                    n.x += (dx / d) * force;
+                    n.y += (dy / d) * force;
+                }
+            }
+
+            // Draw edges
+            for (let i = 0; i < NODE_COUNT; i++) {
+                for (let j = i + 1; j < NODE_COUNT; j++) {
+                    const dx = nodes[i].x - nodes[j].x;
+                    const dy = nodes[i].y - nodes[j].y;
+                    const dist = Math.sqrt(dx*dx + dy*dy);
+                    if (dist < MAX_DIST) {
+                        const alpha = (1 - dist / MAX_DIST) * 0.35;
+                        ctx.beginPath();
+                        ctx.moveTo(nodes[i].x, nodes[i].y);
+                        ctx.lineTo(nodes[j].x, nodes[j].y);
+                        ctx.strokeStyle = `rgba(255, 215, 0, ${alpha})`;
+                        ctx.lineWidth = 0.7;
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            // Draw nodes
+            for (const n of nodes) {
+                ctx.beginPath();
+                ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+                if (n.gold) {
+                    ctx.fillStyle = 'rgba(255, 215, 0, 0.75)';
+                } else {
+                    ctx.fillStyle = 'rgba(200, 200, 200, 0.45)';
+                }
+                ctx.fill();
+            }
+
+            requestAnimationFrame(draw);
+        }
+
+        draw();
+    })();
+
+    // ── SCROLL & HOVER 3D EFFECTS ───────────────────────────────────
+    (function () {
+        // Cards: 3D tilt on mouse hover
+        document.querySelectorAll('.card, .skills-box, .about-box, .achievement-box').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const r = card.getBoundingClientRect();
+                const rx = ((e.clientY-r.top)/r.height-.5)*-16;
+                const ry = ((e.clientX-r.left)/r.width-.5)*16;
+                card.style.transform = `perspective(700px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-8px) scale(1.03)`;
+                card.style.boxShadow = `${-ry}px ${rx}px 30px rgba(255,215,0,0.18)`;
+                card.style.transition = 'transform 0.08s ease, box-shadow 0.08s ease';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = '';
+                card.style.boxShadow = '';
+                card.style.transition = 'transform 0.4s ease, box-shadow 0.4s ease';
+            });
+        });
+
+        // Skill badges pop
+        document.querySelectorAll('.skill-badge').forEach(b => {
+            b.addEventListener('mouseenter', () => { b.style.transform='scale(1.15) rotateY(8deg)'; b.style.transition='transform 0.2s ease'; });
+            b.addEventListener('mouseleave', () => { b.style.transform=''; });
+        });
+
+        // Nav links flip
+        document.querySelectorAll('.nav-links a').forEach(a => {
+            a.style.display = 'inline-block';
+            a.addEventListener('mouseenter', () => { a.style.transform='rotateX(18deg) translateY(-2px)'; a.style.transition='transform 0.2s ease'; });
+            a.addEventListener('mouseleave', () => { a.style.transform=''; });
+        });
+
+        // Sections: fade + slide up on scroll enter
+        const seen = new WeakSet();
+        const io = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting && !seen.has(e.target)) {
+                    seen.add(e.target);
+                    e.target.style.transition = 'opacity 0.65s ease, transform 0.65s cubic-bezier(0.23,1,0.32,1)';
+                    e.target.style.opacity = '1';
+                    e.target.style.transform = 'translateY(0)';
+                    io.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.07 });
+
+        document.querySelectorAll('section').forEach(s => {
+            s.style.opacity = '0';
+            s.style.transform = 'translateY(40px)';
+            io.observe(s);
+        });
+    })();
+    </script>
+
+</body>
+</html>
